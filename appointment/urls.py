@@ -42,5 +42,4 @@ urlpatterns = [
     path('doctor_status<int:pid>', doctor_status, name="doctor_status"),
     path('d_search_appointment',d_search_appointment,name="d_search_appointment"),
     path('my_patient', my_patient, name="my_patient"),
-]
-+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
