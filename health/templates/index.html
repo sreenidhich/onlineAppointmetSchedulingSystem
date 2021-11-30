@@ -2,22 +2,16 @@
 <html lang="en">
 {% load static %}
 
-
 <head>
-
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 	    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
-
 		<title>Doctor Consultation</title>
-    <!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="{% static 'user/css/bootstrap.min.css' %}">
-    <!-- Main CSS -->
 		<link rel="stylesheet" href="{% static 'user/css/style.css' %}">
 		<style>
-
 			body {
 			background-image: url("https://i.pinimg.com/originals/c1/e4/9c/c1e49c23d3a17dcc45833d4028e45a3f.jpg");
 			  background-repeat: no-repeat;
@@ -25,12 +19,8 @@
               background-size: cover;
 			}
 		</style>
-
 	</head>
-
-		<!-- Main Wrapper -->
 		<div class="main-wrapper">
-
 			<!-- Header -->
 			<header class="header">
 				<nav class="navbar navbar-expand-lg header-nav">
@@ -54,7 +44,6 @@
 							<li class="has-submenu">
 								<a href="#">Doctors <i class="fas fa-chevron-down"></i></a>
 								<ul class="submenu">
-
 									<li><a href="{% url 'login' %}">Appointments</a></li>
 									<li><a href="{% url 'login' %}">Schedule Timing</a></li>
 									<li><a href="{% url 'login' %}">Patients List</a></li>
@@ -69,7 +58,6 @@
 									
 								</ul>
 							</li>
-
 
 							{% if not request.user.is_authenticated %}
 							<li class="login-link">
@@ -90,7 +78,6 @@
 						</li>
 						{% endif %}
 					</ul>
-					<!-- <section class="section section-search"> -->
 						<div class="container-fluid" style="text-align: left;padding-top: 50px;">
 							<div class="banner-wrapper">
 								<div class="banner-header">
@@ -103,30 +90,20 @@
 					</section>
 				</nav>
 			</header>
-
 {% block body %}
 {% endblock %}
 
 
-
-
 	   </div>
-	   <!-- /Main Wrapper -->
-
 		<!-- jQuery -->
 		<script src="{% static 'user/js/jquery.min.js' %}"></script>
-
 		<!-- Bootstrap Core JS -->
 		<script src="{% static 'user/js/popper.min.js' %}"></script>
 		<script src="{% static 'user/js/bootstrap.min.js' %}"></script>
-
 		<!-- Slick JS -->
 		<script src="{% static 'user/js/slick.js' %}"></script>
-
 		<!-- Custom JS -->
 		<script src="{% static 'user/js/script.js' %}"></script>
-
 	</body>
-
 
 </html>
