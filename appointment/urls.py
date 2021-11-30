@@ -3,7 +3,6 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from health.views import *
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home,name="home"),
@@ -11,7 +10,6 @@ urlpatterns = [
     path('register', Registeration,name="register"),
     path('logout', Logout,name="logout"),
     path('cancel_appointment<int:pid>', cancel_appointment,name="cancel_appointment"),
-
 #Admin Url
     path('admin_dashboard', admin_dashboard,name="admin_dashboard"),
     path('admin_view_appointment', admin_view_appointment,name="admin_view_appointment"),
@@ -30,7 +28,6 @@ urlpatterns = [
     path('p_appointment', p_appointment,name="p_appointment"),
     path('confirmed_p_appointment',confirmed_p_appointment,name="confirmed_p_appointment"),
     path('history_p_appointment',history_p_appointment,name="history_p_appointment"),
-    path('p_search_appointment',p_search_appointment,name="p_search_appointment"),
     path('all_doctor_appointment',all_doctor_appointment,name="all_doctor_appointment"),
 #Doctor Url
     path('doctor_dashboard', doctor_dashboard,name="doctor_dashboard"),
@@ -45,4 +42,4 @@ urlpatterns = [
     path('doctor_status<int:pid>', doctor_status, name="doctor_status"),
     path('d_search_appointment',d_search_appointment,name="d_search_appointment"),
     path('my_patient', my_patient, name="my_patient"),
-]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+]

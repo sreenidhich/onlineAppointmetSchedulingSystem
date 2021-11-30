@@ -5,7 +5,6 @@
  */
 ;
 (function() {
-
     /**
      * Class for dimension change detection.
      *
@@ -24,7 +23,6 @@
             this.add = function(ev) {
                 this.q.push(ev);
             };
-
             var i, j;
             this.call = function() {
                 for (i = 0, j = this.q.length; i < j; i++) {
@@ -32,7 +30,6 @@
                 }
             };
         }
-
         /**
          * @param {HTMLElement} element
          * @param {String}      prop
@@ -47,7 +44,6 @@
                 return element.style[prop];
             }
         }
-
         /**
          *
          * @param {HTMLElement} element
@@ -61,12 +57,10 @@
                 element.resizedAttached.add(resized);
                 return;
             }
-
             element.resizeSensor = document.createElement('div');
             element.resizeSensor.className = 'resize-sensor';
             var style = 'position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;';
             var styleChild = 'position: absolute; left: 0; top: 0; transition: 0s;';
-
             element.resizeSensor.style.cssText = style;
             element.resizeSensor.innerHTML =
                 '<div class="resize-sensor-expand" style="' + style + '">' +
@@ -76,18 +70,14 @@
                     '<div style="' + styleChild + ' width: 200%; height: 200%"></div>' +
                 '</div>';
             element.appendChild(element.resizeSensor);
-
             if (!{fixed: 1, absolute: 1}[getComputedStyle(element, 'position')]) {
                 element.style.position = 'relative';
             }
-
             var expand = element.resizeSensor.childNodes[0];
             var expandChild = expand.childNodes[0];
             var shrink = element.resizeSensor.childNodes[1];
             var shrinkChild = shrink.childNodes[0];
-
             var lastWidth, lastHeight;
-
             var reset = function() {
                 expandChild.style.width = expand.offsetWidth + 10 + 'px';
                 expandChild.style.height = expand.offsetHeight + 10 + 'px';
@@ -98,15 +88,12 @@
                 lastWidth = element.offsetWidth;
                 lastHeight = element.offsetHeight;
             };
-
             reset();
-
             var changed = function() {
                 if (element.resizedAttached) {
                     element.resizedAttached.call();
                 }
             };
-
             var addEvent = function(el, name, cb) {
                 if (el.attachEvent) {
                     el.attachEvent('on' + name, cb);
@@ -114,18 +101,15 @@
                     el.addEventListener(name, cb);
                 }
             };
-
             var onScroll = function() {
               if (element.offsetWidth != lastWidth || element.offsetHeight != lastHeight) {
                   changed();
               }
               reset();
             };
-
             addEvent(expand, 'scroll', onScroll);
             addEvent(shrink, 'scroll', onScroll);
         }
-
         var elementType = Object.prototype.toString.call(element);
         var isCollectionTyped = ('[object Array]' === elementType
             || ('[object NodeList]' === elementType)
@@ -133,7 +117,6 @@
             || ('undefined' !== typeof jQuery && element instanceof jQuery) //jquery
             || ('undefined' !== typeof Elements && element instanceof Elements) //mootools
         );
-
         if (isCollectionTyped) {
             var i = 0, j = element.length;
             for (; i < j; i++) {
@@ -142,7 +125,6 @@
         } else {
             attachResizeEvent(element, callback);
         }
-
         this.detach = function() {
             if (isCollectionTyped) {
                 var i = 0, j = element.length;
@@ -154,7 +136,6 @@
             }
         };
     };
-
     ResizeSensor.detach = function(element) {
         if (element.resizeSensor) {
             element.removeChild(element.resizeSensor);
@@ -162,7 +143,6 @@
             delete element.resizedAttached;
         }
     };
-
     // make available to common module loader
     if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         module.exports = ResizeSensor;
@@ -170,7 +150,5 @@
     else {
         window.ResizeSensor = ResizeSensor;
     }
-
 })();
-
 //# sourceMappingURL=maps/ResizeSensor.js.map

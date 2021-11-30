@@ -3,7 +3,6 @@ Author       : Dreamguys
 Template Name: Doccure - Bootstrap Template
 Version      : 1.0
 */
-
 (function($) {
     "use strict";
 	
@@ -42,7 +41,6 @@ Version      : 1.0
 		});
 		//$('.main-nav li.has-submenu a.active').parents('li:last').children('a:first').addClass('active').trigger('click');
 	}
-
 	// Sidebar Initiate
 	init();
 	}
@@ -91,7 +89,6 @@ Version      : 1.0
 	}
 	
 	// Floating Label
-
 	if($('.floating').length > 0 ){
 		$('.floating').on('focus blur', function (e) {
 		$(this).parents('.form-focus').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
@@ -154,7 +151,6 @@ Version      : 1.0
 		$(this).closest('.hours-cont').remove();
 		return false;
     });
-
     $(".add-hours").on('click', function () {
 		
 		var hourscontent = '<div class="row form-row hours-cont">' +
@@ -207,7 +203,6 @@ Version      : 1.0
 	if($('.content').length > 0 ){
 		resizeInnerDiv();
 	}
-
 	$(window).resize(function(){
 		if($('.content').length > 0 ){
 			resizeInnerDiv();
@@ -255,7 +250,6 @@ Version      : 1.0
 				  settings: {
 					slidesToShow: 1
 				  }
-
 			}]
 		});
 	}
@@ -276,7 +270,6 @@ Version      : 1.0
 	}
 	
 	// Chat
-
 	var chatAppTarget = $('.chat-window');
 	(function() {
 		if ($(window).width() > 991)

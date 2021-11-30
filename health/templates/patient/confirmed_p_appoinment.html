@@ -5,36 +5,23 @@
 {% for i in messages %}
 <p style="color:red">{{i}}</p>
 {% endfor %}
-
 <div class="card">
     <div class="row">
-        <!-- Appointment List -->
-        
             <div class="col-10">
                 <p>
                     <span style="margin-right:3%"></span>
                     Doctor Details
                 </p>
             </div>
-
-        <div class="col-2">
-                   
-                
-
+            <div class="col-2">
                     <span style="margin-left:23%">
                         Status
                     </span>
-
                     </div>
                 </div>
             </div>
-
-        
-
     {% for i in data %}
         <div class="appointments">
-
-                <!-- Appointment List -->
                 <div class="appointment-list">
                     <div class="profile-info-widget">
                         
@@ -49,14 +36,12 @@
                         </div>
                     </div>
                     <div class="appointment-action">
-                        
+      
                         <a href="javascript:void(0);" class="btn btn-sm bg-success-light">
                             <i class="fas fa-check"></i>{{i.status}}
                         </a>
-                        
                     </div>
                 </div>
             </div>
 {% endfor %}
-
 {% endblock %}

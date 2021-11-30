@@ -3,17 +3,14 @@
 {% block b %}
 {% load static %}
 <h2 style="font-family:roman;color:green" align="center" class="card">Profile </h2>
-
 <div class="card">
 	{% for i in messages %}
 <p style="color:red">{{i}}</p>
 {% endfor %}
-
 </div>
 <form action="" method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 <div class="card" xmlns="http://www.w3.org/1999/html">
-
 
 								<div class="card-body">
 									<h4 class="card-title">Basic Information</h4>
@@ -71,7 +68,6 @@
 								</div>
 </div>
 							<!-- /Basic Information -->
-
 							<!-- About Me -->
 							<div class="card">
 								<div class="card-body">
@@ -83,14 +79,12 @@
 								</div>
 							</div>
 							<!-- /About Me -->
-
 							<!-- Clinic Info -->
 							<div class="card">
 								<div class="card-body">
 									<h4 class="card-title">Availablities</h4>
 									<div class="row form-row">
 										
-
 										<div class="col-md-6">
 											<div class="form-group">
 												<label>Days</label>
@@ -103,14 +97,11 @@
 												{% render_field form.timing class="form-control" value=request.user.doctor_set.all.0.timing %}
 											</div>
 										</div>
-
 									</div>
 								</div>
 							</div>
-
 							
 							<!-- /Pricing -->
-
 							<!-- Services and Specialization -->
 							<div class="card services-card">
 								<div class="card-body">
@@ -122,9 +113,7 @@
 								</div>
 							</div>
 							<!-- /Services and Specialization -->
-
 	<!-- /Education -->
-
 							<!-- Experience -->
 							<div class="card">
 								<div class="card-body">
@@ -140,10 +129,8 @@
 									</div>
 							<!-- /Experience -->
 							<!-- Registrations -->
-
 							<div class="submit-section submit-btn-bottom">
 								<button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
 							</div>
 							</form>
-
 {% endblock %}

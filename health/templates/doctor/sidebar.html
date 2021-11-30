@@ -4,10 +4,8 @@
 			<!-- Page Content -->
 			<div class="content">
 				<div class="container-fluid">
-
 					<div class="row">
 						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
-
 							<!-- Profile Sidebar -->
 							<div class="profile-sidebar">
 								<div class="widget-profile pro-widget-content">
@@ -15,7 +13,6 @@
 										
 										<div class="profile-det-info">
 											<h3>Dr. {{request.user.first_name}} {{request.user.last_name}}</h3>
-
 											<div class="patient-details">
 												<h5 class="mb-0">{{request.user.doctor_set.all.0.biography}}</h5>
 											</div>
@@ -43,7 +40,6 @@
 													<span>My Patients</span>
 												</a>
 											</li>
-
 									
 											<li>
 												<a href="{% url 'doctor_profile' %}">
@@ -68,23 +64,15 @@
 								</div>
 							</div>
 							<!-- /Profile Sidebar -->
-
 						</div>
-
 						<div class="col-md-7 col-lg-8 col-xl-9">
-
                             {% block b %}
                             {% endblock %}
-
                             </div>
 					</div>
-
 				</div>
-
 			</div>
-
 
 {% endblock %}
 {% block c %}
-
 {% endblock %}

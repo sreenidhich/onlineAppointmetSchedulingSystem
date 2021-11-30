@@ -1,7 +1,6 @@
 
 !function($) {
     "use strict";
-
     var CalendarApp = function() {
         this.$body = $("body")
         this.$calendar = $('#calendar'),
@@ -12,7 +11,6 @@
         this.$saveCategoryBtn = $('.save-category'),
         this.$calendarObj = null
     };
-
 
     /* on drop */
     CalendarApp.prototype.onDrop = function (eventObj, date) { 
@@ -127,7 +125,6 @@
         var y = date.getFullYear();
         var form = '';
         var today = new Date($.now());
-
         var defaultEvents =  [{
                 title: 'Event Name 4',
                 start: new Date($.now() + 148000000),
@@ -149,7 +146,6 @@
                 start: new Date($.now() + 338000000),
                 className: 'bg-primary'
             }];
-
         var $this = this;
         $this.$calendarObj = $this.$calendar.fullCalendar({
             slotDuration: '00:15:00', /* If we want to split day time each 15minutes */
@@ -171,9 +167,7 @@
             drop: function(date) { $this.onDrop($(this), date); },
             select: function (start, end, allDay) { $this.onSelect(start, end, allDay); },
             eventClick: function(calEvent, jsEvent, view) { $this.onEventClick(calEvent, jsEvent, view); }
-
         });
-
         //on new event
         this.$saveCategoryBtn.on('click', function(){
             var categoryName = $this.$categoryForm.find("input[name='category-name']").val();
@@ -182,15 +176,12 @@
                 $this.$extEvents.append('<div class="calendar-events" data-class="bg-' + categoryColor + '" style="position: relative;"><i class="fa fa-circle text-' + categoryColor + '"></i>' + categoryName + '</div>')
                 $this.enableDrag();
             }
-
         });
     },
-
    //init CalendarApp
     $.CalendarApp = new CalendarApp, $.CalendarApp.Constructor = CalendarApp
     
 }(window.jQuery),
-
 //initializing CalendarApp
 function($) {
     "use strict";

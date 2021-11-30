@@ -3,7 +3,6 @@ Author       : Dreamguys
 Template Name: Doccure - Bootstrap Admin Template
 Version      : 1.0
 */
-
 (function($) {
     "use strict";
 	
@@ -102,7 +101,6 @@ Version      : 1.0
 			$(this).closest('.temp').addClass('table-responsive').removeClass('temp')
 		});
 	}
-
 	// Tooltip
 	
 	if($('[data-toggle="tooltip"]').length > 0 ){
@@ -110,7 +108,6 @@ Version      : 1.0
 	}
 	
     // Datatable
-
     if ($('.datatable').length > 0) {
         $('.datatable').DataTable({
             "bFilter": false,
@@ -118,13 +115,11 @@ Version      : 1.0
     }
 	
 	// Email Inbox
-
 	if($('.clickable-row').length > 0 ){
 		$(document).on('click', '.clickable-row', function() {
 			window.location = $(this).data("href");
 		});
 	}
-
 	// Check all email
 	
 	$(document).on('click', '#check_all', function() {
@@ -161,7 +156,6 @@ Version      : 1.0
 	}
 	
     // Product thumb images
-
     if ($('.proimage-thumb li a').length > 0) {
         var full_image = $(this).attr("href");
         $(".proimage-thumb li a").click(function() {
@@ -171,9 +165,7 @@ Version      : 1.0
             return false;
         });
     }
-
     // Lightgallery
-
     if ($('#pro_popup').length > 0) {
         $('#pro_popup').lightGallery({
             thumbnail: true,
@@ -182,7 +174,6 @@ Version      : 1.0
     }
 	
 	// Sidebar Slimscroll
-
 	if($slimScrolls.length > 0) {
 		$slimScrolls.slimScroll({
 			height: 'auto',
@@ -205,7 +196,6 @@ Version      : 1.0
 	}
 	
 	// Small Sidebar
-
 	$(document).on('click', '#toggle_btn', function() {
 		if($('body').hasClass('mini-sidebar')) {
 			$('body').removeClass('mini-sidebar');
@@ -234,6 +224,5 @@ Version      : 1.0
 			return false;
 		}
 	});
-
 	
 })(jQuery);

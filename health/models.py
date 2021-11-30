@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-
 # Create your models here.
 blood_group=[('-A','-A'),
 ('+A','+A'),
@@ -11,12 +10,10 @@ blood_group=[('-A','-A'),
 ('-O','-O'),
 ('+O','+O'),
 ]
-
 gender=[('Male','Male'),
 ('Female','Female'),
 ('Other','Other'),
 ]
-
 class Patient(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     blood_group = models.CharField(max_length=10,choices=blood_group,null=True)
@@ -29,10 +26,8 @@ class Patient(models.Model):
    
     dob = models.DateField(null=True)
 
-
     def __str__(self):
         return self.user.username
-
 class Doctor(models.Model):
     status = models.CharField(max_length=100,null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -46,7 +41,6 @@ class Doctor(models.Model):
     gender = models.CharField(max_length=100,choices=gender,null=True)
     biography = models.TextField(null=True)
     
-
     def __str__(self):
         return self.user.username
         
@@ -58,19 +52,14 @@ class Appointment(models.Model):
     a_timing=models.CharField(max_length=100,null=True)
     status=models.CharField(max_length=100,null=True)
     p_status=models.CharField(max_length=100,null=True)
-
     def __str__(self):
         return self.doctor.user.username+" has an appointment with " +self.patient.user.username
-
 class Adminstration(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     mobile = models.CharField(max_length=10,null=True,blank=True)
     address = models.CharField(max_length=100,null=True,blank=True)
     
-
     def __str__(self):
         return self.user.username
-
-
 
 

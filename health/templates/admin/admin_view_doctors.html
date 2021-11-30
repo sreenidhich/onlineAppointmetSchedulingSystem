@@ -2,11 +2,8 @@
 {% load static %}
 {% block body %}
 <h2 style="font-family:roman;color:green" align="center" class="card">View Doctors</h2>
-
    <div class="page-wrapper">
                 <div class="content container-fluid">
-
-					<!-- Page Header -->
 					<div class="page-header">
 						<div class="row">
 							<div class="col-sm-12">
@@ -22,8 +19,6 @@
 							</div>
 						</div>
 					</div>
-					<!-- /Page Header -->
-
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="card">
@@ -37,7 +32,6 @@
 													<th>Timing</th>
 													<th>Availablity</th>
 													<th>Status</th>
-
 												</tr>
 											</thead>
 											<tbody>
@@ -49,11 +43,8 @@
 														</h2>
 													</td>
 													<td>{{i.specialist}}</td>
-
 													<td> {{i.daystiming}}<br><small>{{i.timing}}</small></td>
-
 													<td>Yes</td>
-
 													<td>
 														{% if i.status == "pending" %}
 														<div class="status-toggle">
@@ -72,7 +63,6 @@
 														{% endif %}
 													</td>
 												</tr>
-
 											{% endfor %}
 											</tbody>
 										</table>
@@ -84,20 +74,14 @@
 				</div>
 </div>
 
-
 <script src="{% static 'admin/js/jquery-3.2.1.min.js' %}"></script>
-
 		<!-- Bootstrap Core JS -->
-
 		<!-- Slimscroll JS -->
         <script src="{% static 'admin/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
-
 		<!-- Datatables JS -->
 		<script src="{% static 'admin/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 		<script src="{% static 'admin/plugins/datatables/datatables.min.js' %}"></script>
-
 		<!-- Custom JS -->
 		<script  src="{% static 'admin/js/script.js' %}"></script>
-
 
 {% endblock %}

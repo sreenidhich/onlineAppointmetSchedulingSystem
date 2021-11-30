@@ -8,9 +8,14 @@ import uuid
 import random
 from django.db.models import Avg,Sum,Count,Min,Max
 from django.views.generic import TemplateView
-
 from datetime import timedelta
-
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.template.loader import render_to_string
+import datetime
+import json
+import http.client
+from django.views.decorators.cache import cache_control
 # Create your views here.
 def access(user):
     try:
@@ -21,7 +26,6 @@ def access(user):
             return True
     except:
            pass
-
 def home(request):
     try:
         user = User.objects.get(username=request.user)
@@ -41,7 +45,6 @@ def home(request):
                         pass
     
     return render(request,'index.html')
-
 def Registeration(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
@@ -58,7 +61,7 @@ def Registeration(request):
         form = SignUpForm()
     d = {'form':form}
     return render(request,'register.html',d)
-
+@cache_control(no_cache=True, must_revalidate=True)
 def Login(request):
     if request.method == "POST":
         u = request.POST['username']
@@ -72,26 +75,23 @@ def Login(request):
             messages.success(request,'Invalid Credential')
             return redirect('login')
     return render(request,'login.html')
-
+@cache_control(no_cache=True, must_revalidate=True)
 def Logout(request):
     logout(request)
     messages.info(request,'You have logged out successfully')
     return redirect('login')
-
-
 def patient_dashboard(request):
-    pat = Appointment.objects.filter(patient=Patient.objects.get(user=request.user))
-    d = {'data':pat}
-    return render(request,'patient/patient_dashboard.html',d)
-
-
-
+    if request.user.is_authenticated:
+        pat = Appointment.objects.filter(patient=Patient.objects.get(user=request.user))
+        d = {'data':pat}
+        return render(request,'patient/patient_dashboard.html',d)
+    else:
+        messages.info(request,'You are not logged in')
+        return redirect('login')
 def all_doctor_appointment(request):
     pat = Appointment.objects.filter(patient=Patient.objects.get(user=request.user))
     d = {'data':pat}
     return render(request,'patient/all_doctor_appointment.html',d)
-
-
 def doctor_dashboard(request):
     tod = datetime.date.today()
     data = Appointment.objects.filter(doctor=Doctor.objects.get(user=request.user))
@@ -103,9 +103,6 @@ def doctor_dashboard(request):
     t_pending = pend.count()
     d = {'data': data, 'total': c, 'up': up, 'today': today,'t_today':t_today,'t_pending':t_pending}
     return render(request,'doctor/doctor_dashboard.html',d)
-
-
-
 def Patient_Profile(request):
     user = User.objects.get(id=request.user.id)
     pat = Patient.objects.get(user=user)
@@ -122,7 +119,6 @@ def Patient_Profile(request):
             return redirect("patient_profile")
     d = {'form':form}
     return render(request,'patient/profile.html',d)
-
 def Change_Password(request):
     if request.method=="POST":
         n = request.POST['pwd1']
@@ -135,7 +131,6 @@ def Change_Password(request):
             messages.success(request,'Password Changed Successfully')
             return redirect("change_password")
     return render(request,'patient/change_password.html')
-
 def Doctor_Profile(request):
     user = User.objects.get(id=request.user.id)
     pat = Doctor.objects.get(user=user)
@@ -152,7 +147,6 @@ def Doctor_Profile(request):
             return redirect("doctor_profile")
     d = {'doc':pat,'form':form}
     return render(request,'doctor/profile.html',d)
-
 def Doctor_Change_Password(request):
     if request.method=="POST":
         n = request.POST['pwd1']
@@ -165,7 +159,6 @@ def Doctor_Change_Password(request):
             messages.success(request,'Password Changed Successfully')
             return redirect("change_password")
     return render(request,'doctor/change_password.html')
-
 def search_doctor(request):
     data = Doctor.objects.all()
     l = "All"
@@ -190,31 +183,35 @@ def search_doctor(request):
         data = Doctor.objects.filter(gender__icontains=g,specialist__icontains=s)
     d={'data':data,'l':l,'g':g,'s':s}
     return render(request,'patient/search_doctor.html',d)
-
 def appointment(request,pid):
     doctor=Doctor.objects.get(id=pid)
     if request.method == "POST":
         a = request.POST['a_date']
         app=Appointment.objects.create(doctor=doctor,patient=Patient.objects.get(user=request.user),a_date=a,status="pending",p_status="pending")
+        template1 =render_to_string('patient/pemail_template.html',{'name':request.user.first_name,'doctor':doctor.user.first_name})
+        email = EmailMessage(
+        'hello',
+        template1,
+        settings.EMAIL_HOST_USER,
+        [request.user.email],
+        )
+        email.fail_silently=False
+        email.send()
         return redirect("requestAppointment",app.id)
     d={'doctor':doctor}
     return render(request,'patient/appointment.html',d)
-
 def requestAppointment(request,pid):
     data=Appointment.objects.get(id=pid)
     if request.method=="POST":
         data.p_status="complete"
         data.save()
-        return redirect("booking-success",data.id)
+        return render(request,'patient/requestAppointment.html',data.id)
     d={'data':data}
-    return render(request,'patient/booking-success.html',d)
-
-
+    return render(request,'patient/requestAppointment.html',d)
 def p_appointment(request):
     data=Appointment.objects.filter(patient=Patient.objects.get(user=request.user),status="pending")
     d={'data':data}
     return render(request,'patient/p_appoinment.html',d)
-
 def d_appointment(request):
     if not access(request.user):
         messages.success(request,'Update Your Profile and Wait for Verification')
@@ -222,7 +219,6 @@ def d_appointment(request):
     data=Appointment.objects.filter(doctor=Doctor.objects.get(user=request.user),status="pending")
     d={'data':data}
     return render(request,'doctor/d_appoinment.html',d)
-
 def update_status(request,pid):
     if not access(request.user):
         messages.success(request,'Update Your Profile and Wait for Verification')
@@ -239,13 +235,11 @@ def update_status(request,pid):
         return redirect("d_appointment")
     d={'form':form,'data':data}
     return render(request,'doctor/update_status.html',d)
-
 def confirmed_p_appointment(request):
     tod=datetime.date.today()
     data=Appointment.objects.filter(patient=Patient.objects.get(user=request.user),status="confirmed",a_date__gte=tod)
     d={'data':data}
     return render(request,'patient/confirmed_p_appoinment.html',d)
-
 def confirmed_d_appointment(request):
     if not access(request.user):
         messages.success(request,'Update Your Profile and Wait for Verification')
@@ -253,15 +247,25 @@ def confirmed_d_appointment(request):
     tod=datetime.date.today()
     data=Appointment.objects.filter(doctor=Doctor.objects.get(user=request.user),status="confirmed",a_date__gte=tod)
     d={'data':data}
+    time_now=datetime.datetime.now()
+    expiration_time=time_now+datetime.timedelta(seconds=36)
+    round_off_time=round(expiration_time.timestamp())
+    headers= {"alg":"HS256","typ":"JWT"}
+    template =render_to_string('doctor/email_template.html',{'name':request.user.first_name})
+    email = EmailMessage(
+        'hello',
+        template,
+        settings.EMAIL_HOST_USER,
+        [request.user.email],
+    )
+    email.fail_silently=False
+    email.send()
     return render(request,'doctor/confirmed_d_appoinment.html',d)
-
 def history_p_appointment(request):
     tod=datetime.date.today()
     data=Appointment.objects.filter(patient=Patient.objects.get(user=request.user),a_date__lte=tod)
     d={'data':data}
     return render(request,'patient/history_p_appoinment.html',d)
-
-
 def history_d_appointment(request):
     if not access(request.user):
         messages.success(request,'Update Your Profile and Wait for Verification')
@@ -270,20 +274,6 @@ def history_d_appointment(request):
     data=Appointment.objects.filter(doctor=Doctor.objects.get(user=request.user),a_date__lte=tod)
     d={'data':data}
     return render(request,'doctor/history_d_appoinment.html',d)
-
-def p_search_appointment(request):
-    data=""
-    u = ""
-    v = ""
-    if request.method=="POST":
-        u=request.POST['from_date']
-        v=request.POST['to_date']
-        i1 = datetime.datetime.fromisoformat(u)
-        i2 = datetime.datetime.fromisoformat(v)
-        data = Appointment.objects.filter(patient=Patient.objects.get(user=request.user),a_date__gte=datetime.date(i1.year,i1.month,i1.day),a_date__lte=datetime.date(i2.year,i2.month,i2.day))
-    d={'data':data,'u':u,'v':v}
-    return render(request,'patient/p_search_appoinment.html',d)
-
 def Login_Admin(request):
     error = False
     if request.method == 'POST':
@@ -296,48 +286,35 @@ def Login_Admin(request):
         else:
             error = True
     d = {'error': error}
-
     return render(request, 'login.html', d)
-
 def admin_dashboard(request):
     t_doc = Doctor.objects.all().count()
     t_pat = Patient.objects.all().count()
     t_app2 = Appointment.objects.all().count()
     d = {'t_doc':t_doc,'t_pat':t_pat,'t_app2':t_app2}
     return render(request,'admin/admin_dashboard.html',d)
-
 def admin_view_appointment(request):
     data=Appointment.objects.all()
     d={'data':data}
     return render(request,'admin/admin_view_appointment.html',d)
-
-
-
-
 def admin_view_doctors(request):
     data=Doctor.objects.all()
     d={'data':data}
     return render(request,'admin/admin_view_doctors.html',d)
-
 def admin_view_patients(request):
     data=Patient.objects.all()
     d={'data':data}
     return render(request,'admin/admin_view_patients.html',d)
-
 def cancel_appointment(request,pid):
     pat = Appointment.objects.get(id=pid)
     pat.delete()
     messages.success(request,'Appointment Cancelled Successfully')
     return redirect('p_appointment')
-
-
 def doctor_cancel_appointment(request,pid):
     pat = Appointment.objects.get(id=pid)
     pat.delete()
     messages.success(request,'Appointment Cancelled Successfully')
     return redirect('d_appointment')
-
-
 def d_search_appointment(request):
     if not access(request.user):
         messages.success(request,'Update Your Profile and Wait for Verification')
@@ -353,7 +330,6 @@ def d_search_appointment(request):
         data = Appointment.objects.filter(doctor=Doctor.objects.get(user=request.user),a_date__gte=datetime.date(i1.year,i1.month,i1.day),a_date__lte=datetime.date(i2.year,i2.month,i2.day))
     d={'data':data,'u':u,'v':v}
     return render(request,'doctor/d_search_appoinment.html',d)
-
 def doctor_status(request,pid):
     pat = Doctor.objects.get(id=pid)
     if pat.status=="pending":
@@ -365,7 +341,6 @@ def doctor_status(request,pid):
         pat.save()
         messages.success(request, 'Selected Doctor Withdraw to Permission')
     return redirect('admin_view_doctors')
-
 def admin_profile(request):
     return render(request,'admin/profile.html')
 def edit_admin_profile(request):
@@ -406,7 +381,6 @@ def edit_admin_profile(request):
         except:
             pass
     return redirect('admin_profile')
-
 def my_patient(request):
     if not access(request.user):
         messages.success(request,'Update Your Profile and Wait for Verification')
@@ -414,7 +388,6 @@ def my_patient(request):
     data = Appointment.objects.filter(doctor=Doctor.objects.get(user=request.user),status="confirmed")
     d = {'data':data}
     return render(request,'doctor/my_patient.html',d)
-
 def doc_patient_dashboard(request,pid):
     if not access(request.user):
         messages.success(request,'Update Your Profile and Wait for Verification')
@@ -429,12 +402,8 @@ def doc_patient_dashboard(request,pid):
         pat2 = pat2.id
     d = {'data': pat,'pat':data,'pat2':pat2}
     return render(request,'doctor/doc_patient_dashboard.html',d)
-
-
-
 def delete_patient(request,pid):
     data = Patient.objects.get(id=pid)
     data.delete()
     messages.success(request,'Patient deleted successfully')
     return redirect('admin_view_patients')
-
